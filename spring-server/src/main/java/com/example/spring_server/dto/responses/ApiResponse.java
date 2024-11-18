@@ -1,5 +1,8 @@
 package com.example.spring_server.dto.responses;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 public class ApiResponse<T> {
 
     private Boolean status;
@@ -17,6 +20,7 @@ public class ApiResponse<T> {
         this.message = message;
     }
 
+    // Getters
     public Boolean getStatus() {
         return this.status;
     }
@@ -27,5 +31,10 @@ public class ApiResponse<T> {
 
     public T getData() {
         return this.data;
+    }
+
+    // Convenience method to return ResponseEntity with this ApiResponse
+    public ResponseEntity<ApiResponse<T>> toResponseEntity(HttpStatus status) {
+        return new ResponseEntity<>(this, status);
     }
 }

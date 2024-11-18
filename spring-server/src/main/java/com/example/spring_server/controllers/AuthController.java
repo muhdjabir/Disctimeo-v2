@@ -1,12 +1,14 @@
 package com.example.spring_server.controllers;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.spring_server.dto.responses.ApiResponse;
 
 @RestController
-public class AuthController extends V1BaseController {
+@RequestMapping("/api/v1/auth")
+public class AuthController {
 
     @PostMapping("/register")
     public ApiResponse<String> register() {
