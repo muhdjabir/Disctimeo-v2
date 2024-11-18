@@ -66,6 +66,15 @@ public class User {
         this.startedPlaying = userDTO.getStartedPlaying();
     }
 
+    public User(Long id, String username, String email, Role role, Position position, Date startedPlaying) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.role = role;
+        this.position = position;
+        this.startedPlaying = startedPlaying;
+    }
+
     // Getters and setters
     public Long getId() {
         return id;
