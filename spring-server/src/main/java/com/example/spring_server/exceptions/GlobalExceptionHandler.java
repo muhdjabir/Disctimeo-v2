@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.example.spring_server.dto.responses.ApiResponse;
+import com.example.spring_server.exceptions.team.TeamAlreadyExistsException;
+import com.example.spring_server.exceptions.team.TeamNotFoundException;
 import com.example.spring_server.exceptions.user.UserAlreadyExistsException;
 import com.example.spring_server.exceptions.user.UserNotFoundException;
 
@@ -20,6 +22,18 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<ApiResponse<String>> handleUserAlreadyExistsException(UserAlreadyExistsException exception) {
+        ApiResponse<String> response = new ApiResponse<>(false, exception.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(TeamNotFoundException.class)
+    public ResponseEntity<ApiResponse<String>> handleTeamNotFoundException(TeamNotFoundException exception) {
+        ApiResponse<String> response = new ApiResponse<>(false, exception.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(TeamAlreadyExistsException.class)
+    public ResponseEntity<ApiResponse<String>> handleTeamAlreadyExistsException(TeamAlreadyExistsException exception) {
         ApiResponse<String> response = new ApiResponse<>(false, exception.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
