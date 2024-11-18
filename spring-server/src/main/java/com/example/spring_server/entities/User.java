@@ -1,17 +1,23 @@
 package com.example.spring_server.entities;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import com.example.spring_server.dto.requests.UserDTO;
 import com.example.spring_server.enums.Position;
 import com.example.spring_server.enums.Role;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -32,16 +38,21 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Enumerated(EnumType.STRING) // Ensures that the Role is stored as a string in the database
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
-    @Enumerated(EnumType.STRING) // Ensures that the Position is stored as a string in the database
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Position position;
 
     @Temporal(TemporalType.DATE)
     private Date startedPlaying;
+
+    @ManyToMany
+    @JoinTable(name = "user_team", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "team_id"))
+    @JsonManagedReference
+    private Set<Team> teams = new HashSet<>();
 
     public User() {
     }
@@ -104,6 +115,14 @@ public class User {
         this.startedPlaying = startedPlaying;
     }
 
+    public Set<Team> getTeams() {
+        return teams;
+    }
+
+    public void setTeams(Set<Team> teams) {
+        this.teams = teams;
+    }
+
     // Override equals() and hashCode() for entity comparisons
     @Override
     public boolean equals(Object o) {
@@ -130,6 +149,7 @@ public class User {
                 ", role=" + role +
                 ", position=" + position +
                 ", startedPlaying=" + startedPlaying +
+                ", teams =" + teams +
                 '}';
     }
 }

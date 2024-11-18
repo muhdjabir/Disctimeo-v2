@@ -6,19 +6,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.spring_server.dto.requests.UserDTO;
+import com.example.spring_server.entities.Team;
 import com.example.spring_server.entities.User;
+import com.example.spring_server.exceptions.team.TeamNotFoundException;
 import com.example.spring_server.exceptions.user.UserAlreadyExistsException;
 import com.example.spring_server.exceptions.user.UserNotFoundException;
+import com.example.spring_server.repositories.TeamRepository;
 import com.example.spring_server.repositories.UserRepository;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
+    private final TeamRepository teamRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, TeamRepository teamRepository) {
         this.userRepository = userRepository;
+        this.teamRepository = teamRepository;
     }
 
     public List<User> getAllUsers() {
@@ -77,5 +82,35 @@ public class UserService {
         }
 
         return userRepository.save(existingUser);
+    }
+
+    public User addUserToTeam(Long userId, Long teamId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " does not exist"));
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new TeamNotFoundException("Team not found with id: " + teamId));
+
+        // Add team to user and user to team
+        user.getTeams().add(team);
+        team.getUsers().add(user);
+
+        userRepository.save(user);
+        teamRepository.save(team);
+        return user;
+    }
+
+    public User removeUserFromTeam(Long userId, Long teamId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " does not exist"));
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new TeamNotFoundException("Team not found with id: " + teamId));
+
+        // Remove team from user and user from team
+        user.getTeams().remove(team);
+        team.getUsers().remove(user);
+
+        userRepository.save(user);
+        teamRepository.save(team);
+        return user;
     }
 }
