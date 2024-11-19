@@ -9,7 +9,6 @@ import com.example.spring_server.dto.requests.UserDTO;
 import com.example.spring_server.enums.Position;
 import com.example.spring_server.enums.Role;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
 
@@ -49,7 +48,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"), // Column for the user
             inverseJoinColumns = @JoinColumn(name = "event_id") // Column for the event
     )
-    @JsonManagedReference
+    @JsonBackReference
     private Set<Event> events = new HashSet<>(); // Events that the user is registered for
 
     public User() {

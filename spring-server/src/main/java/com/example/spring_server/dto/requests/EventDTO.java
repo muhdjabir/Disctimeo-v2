@@ -2,6 +2,7 @@ package com.example.spring_server.dto.requests;
 
 import com.example.spring_server.enums.EventType;
 import java.util.Date;
+import java.util.Set;
 
 public class EventDTO {
 
@@ -10,25 +11,27 @@ public class EventDTO {
     private String description;
     private Date eventDate;
     private String registrationDetails;
-    private Long teamId; // Nullable, as not all events are linked to a team
-    private Long userId;
+    private Long creatorClubId; // Nullable, the club creating the event
+    private Long creatorUserId; // Nullable, the user creating the event
+    private Set<Long> participantIds; // IDs of participants (nullable if no participants initially)
 
     // Constructors
     public EventDTO() {
     }
 
     public EventDTO(String name, EventType type, String description, Date eventDate, String registrationDetails,
-            Long teamId, Long userId) {
+            Long creatorClubId, Long creatorUserId, Set<Long> participantIds) {
         this.name = name;
         this.type = type;
         this.description = description;
         this.eventDate = eventDate;
         this.registrationDetails = registrationDetails;
-        this.teamId = teamId;
-        this.userId = userId;
+        this.creatorClubId = creatorClubId;
+        this.creatorUserId = creatorUserId;
+        this.participantIds = participantIds;
     }
 
-    // Getters and setters
+    // Getters and Setters
     public String getName() {
         return name;
     }
@@ -69,19 +72,27 @@ public class EventDTO {
         this.registrationDetails = registrationDetails;
     }
 
-    public Long getTeamId() {
-        return teamId;
+    public Long getCreatorClubId() {
+        return creatorClubId;
     }
 
-    public void setTeamId(Long teamId) {
-        this.teamId = teamId;
+    public void setCreatorClubId(Long creatorClubId) {
+        this.creatorClubId = creatorClubId;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getCreatorUserId() {
+        return creatorUserId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setCreatorUserId(Long creatorUserId) {
+        this.creatorUserId = creatorUserId;
+    }
+
+    public Set<Long> getParticipantIds() {
+        return participantIds;
+    }
+
+    public void setParticipantIds(Set<Long> participantIds) {
+        this.participantIds = participantIds;
     }
 }

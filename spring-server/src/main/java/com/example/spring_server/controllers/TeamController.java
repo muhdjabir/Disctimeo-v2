@@ -61,7 +61,7 @@ public class TeamController {
     }
 
     // Endpoint to add a user to a team
-    @PostMapping("/{teamId}/users/{userId}")
+    @PostMapping("/{teamId}/members/{userId}")
     public ResponseEntity<ApiResponse<Team>> addUserToTeam(@PathVariable Long userId, @PathVariable Long teamId) {
         Team team = teamService.addUserToTeam(userId, teamId);
         ApiResponse<Team> response = new ApiResponse<>(true, "Player added to team successfully.", team);
@@ -69,7 +69,7 @@ public class TeamController {
     }
 
     // Endpoint to remove a user from a team
-    @DeleteMapping("/{teamId}/users/{userId}")
+    @DeleteMapping("/{teamId}/members/{userId}")
     public ResponseEntity<ApiResponse<Team>> removeUserFromTeam(@PathVariable Long userId, @PathVariable Long teamId) {
         Team team = teamService.removeUserFromTeam(userId, teamId);
         ApiResponse<Team> response = new ApiResponse<>(true, "Player removed from team successfully.", team);

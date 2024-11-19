@@ -143,7 +143,7 @@ public class TeamControllerTest {
 
         when(teamService.addUserToTeam(eq(1L), eq(1L))).thenReturn(team);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/teams/1/users/1"))
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/teams/1/members/1"))
                 .andExpect(MockMvcResultMatchers.status().isAccepted())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(true))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Player added to team successfully."))
@@ -161,7 +161,7 @@ public class TeamControllerTest {
 
         when(teamService.removeUserFromTeam(eq(1L), eq(1L))).thenReturn(team);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/teams/1/users/1"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/teams/1/members/1"))
                 .andExpect(MockMvcResultMatchers.status().isAccepted())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(true))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Player removed from team successfully."))

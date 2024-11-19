@@ -5,8 +5,10 @@ import com.example.spring_server.entities.Team;
 import com.example.spring_server.entities.User;
 import com.example.spring_server.repositories.EventRepository;
 import com.example.spring_server.dto.requests.EventDTO;
-import com.example.spring_server.exceptions.event.EventAlreadyExistsException;
 import com.example.spring_server.exceptions.event.EventNotFoundException;
+import com.example.spring_server.exceptions.event.EventAlreadyExistsException;
+import com.example.spring_server.exceptions.user.UserAlreadyInEventException;
+import com.example.spring_server.exceptions.user.UserNotInEventException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,13 +19,13 @@ import java.util.List;
 public class EventService {
 
     private final EventRepository eventRepository;
-    private final UserService userService; // Inject UserService
+    private final UserService userService;
     private final TeamService teamService;
 
     @Autowired
     public EventService(EventRepository eventRepository, UserService userService, TeamService teamService) {
         this.eventRepository = eventRepository;
-        this.userService = userService; // Initialize UserService
+        this.userService = userService;
         this.teamService = teamService;
     }
 
@@ -38,6 +40,7 @@ public class EventService {
                 .orElseThrow(() -> new EventNotFoundException("Event with id " + id + " does not exist"));
     }
 
+    // Create a new event
     public Event createEvent(EventDTO eventDTO) {
         // Check if the event already exists (optional check based on name)
         boolean eventExists = eventRepository.existsByName(eventDTO.getName());
@@ -45,18 +48,21 @@ public class EventService {
             throw new EventAlreadyExistsException("Event with name " + eventDTO.getName() + " already exists");
         }
 
-        // Fetch the Team using the TeamService
-        Team team = null;
-        if (eventDTO.getTeamId() != null) {
-            team = teamService.getTeamById(eventDTO.getTeamId()); // Fetch the Team by ID
+        // Fetch the club (if provided) using TeamService
+        Team creatorClub = null;
+        if (eventDTO.getCreatorClubId() != null) {
+            creatorClub = teamService.getTeamById(eventDTO.getCreatorClubId());
         }
 
-        // Fetch the User using the UserService (Instead of userRepository)
-        User user = userService.getUserById(eventDTO.getUserId()); // Call UserService to fetch the user
+        // Fetch the creator user (if provided) using UserService
+        User creatorUser = null;
+        if (eventDTO.getCreatorUserId() != null) {
+            creatorUser = userService.getUserById(eventDTO.getCreatorUserId());
+        }
 
         // Create a new Event and save it
         Event newEvent = new Event(eventDTO.getName(), eventDTO.getType(), eventDTO.getDescription(),
-                eventDTO.getEventDate(), eventDTO.getRegistrationDetails(), team, user);
+                eventDTO.getEventDate(), eventDTO.getRegistrationDetails(), creatorClub, creatorUser);
 
         return eventRepository.save(newEvent);
     }
@@ -95,4 +101,29 @@ public class EventService {
         return eventRepository.save(existingEvent);
     }
 
+    // Add a participant to an event
+    public Event addParticipant(Long eventId, Long userId) {
+        Event event = getEventById(eventId);
+        User user = userService.getUserById(userId);
+
+        if (event.getParticipants().contains(user)) {
+            throw new UserAlreadyInEventException("User is already a participant in this event");
+        }
+
+        event.getParticipants().add(user);
+        return eventRepository.save(event);
+    }
+
+    // Remove a participant from an event
+    public Event removeParticipant(Long eventId, Long userId) {
+        Event event = getEventById(eventId);
+        User user = userService.getUserById(userId);
+
+        if (!event.getParticipants().contains(user)) {
+            throw new UserNotInEventException("User is not a participant in this event");
+        }
+
+        event.getParticipants().remove(user);
+        return eventRepository.save(event);
+    }
 }

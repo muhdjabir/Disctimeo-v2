@@ -6,13 +6,15 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.example.spring_server.dto.responses.ApiResponse;
-import com.example.spring_server.exceptions.event.EventAlreadyExistsException;
 import com.example.spring_server.exceptions.event.EventNotFoundException;
 import com.example.spring_server.exceptions.team.TeamAlreadyExistsException;
 import com.example.spring_server.exceptions.team.TeamNotFoundException;
+import com.example.spring_server.exceptions.event.EventAlreadyExistsException;
 import com.example.spring_server.exceptions.user.UserAlreadyExistsException;
+import com.example.spring_server.exceptions.user.UserAlreadyInEventException;
 import com.example.spring_server.exceptions.user.UserAlreadyInTeamException;
 import com.example.spring_server.exceptions.user.UserNotFoundException;
+import com.example.spring_server.exceptions.user.UserNotInEventException;
 import com.example.spring_server.exceptions.user.UserNotInTeamException;
 
 @ControllerAdvice
@@ -38,6 +40,19 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserNotInTeamException.class)
     public ResponseEntity<ApiResponse<String>> handleUserNotInTeamException(UserNotInTeamException exception) {
+        ApiResponse<String> response = new ApiResponse<>(false, exception.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserAlreadyInEventException.class)
+    public ResponseEntity<ApiResponse<String>> handleUserAlreadyInEventException(
+            UserAlreadyInEventException exception) {
+        ApiResponse<String> response = new ApiResponse<>(false, exception.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserNotInEventException.class)
+    public ResponseEntity<ApiResponse<String>> handleUserNotInEventException(UserNotInEventException exception) {
         ApiResponse<String> response = new ApiResponse<>(false, exception.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }

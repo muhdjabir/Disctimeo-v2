@@ -1,7 +1,7 @@
 package com.example.spring_server.entities;
 
 import com.example.spring_server.enums.EventType;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
 
@@ -34,27 +34,34 @@ public class Event {
     @Column(name = "registration_details")
     private String registrationDetails;
 
+    // Nullable ManyToOne for the club that created the event
     @ManyToOne
-    @JoinColumn(name = "team_id")
-    private Team team;
+    @JoinColumn(name = "creator_team_id", nullable = true)
+    private Team creatorTeam;
 
+    // Nullable ManyToOne for the user that created the event
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "creator_user_id", nullable = true)
+    private User creatorUser;
 
-    @ManyToMany(mappedBy = "events")
-    @JsonBackReference
-    private Set<User> users = new HashSet<>();
+    // ManyToMany for participants in the event
+    @ManyToMany
+    @JoinTable(name = "event_participants", joinColumns = @JoinColumn(name = "event_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @JsonManagedReference
+    private Set<User> participants = new HashSet<>();
 
-    public Event(String name, EventType type, String description, Date eventDate, String registrationDetails, Team team,
-            User user) {
+    public Event() {
+    }
+
+    public Event(String name, EventType type, String description, Date eventDate, String registrationDetails,
+            Team creatorTeam, User creatorUser) {
         this.name = name;
         this.type = type;
         this.description = description;
         this.eventDate = eventDate;
         this.registrationDetails = registrationDetails;
-        this.team = team; // Team may be null
-        this.user = user;
+        this.creatorTeam = creatorTeam; // Nullable
+        this.creatorUser = creatorUser; // Nullable
     }
 
     // Getters and Setters
@@ -106,27 +113,27 @@ public class Event {
         this.registrationDetails = registrationDetails;
     }
 
-    public Team getTeam() {
-        return team;
+    public Team getCreatorTeam() {
+        return creatorTeam;
     }
 
-    public void setTeam(Team team) {
-        this.team = team;
+    public void setCreatorTeam(Team creatorTeam) {
+        this.creatorTeam = creatorTeam;
     }
 
-    public User getUser() {
-        return user;
+    public User getCreatorUser() {
+        return creatorUser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setCreatorUser(User creatorUser) {
+        this.creatorUser = creatorUser;
     }
 
-    public Set<User> getUsers() {
-        return users;
+    public Set<User> getParticipants() {
+        return participants;
     }
 
-    public void setUsers(Set<User> users) {
-        this.users = users;
+    public void setParticipants(Set<User> participants) {
+        this.participants = participants;
     }
 }

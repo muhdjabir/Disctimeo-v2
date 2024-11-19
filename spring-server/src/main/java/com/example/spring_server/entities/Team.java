@@ -34,9 +34,6 @@ public class Team {
     @Column
     private String venue;
 
-    @OneToMany(mappedBy = "team")
-    private Set<Event> events;
-
     @ManyToMany(mappedBy = "teams", fetch = FetchType.EAGER)
     @JsonManagedReference
     private Set<User> users = new HashSet<>();
@@ -118,14 +115,6 @@ public class Team {
         this.users = users;
     }
 
-    public Set<Event> getEvents() {
-        return events;
-    }
-
-    public void setEvents(Set<Event> events) {
-        this.events = events;
-    }
-
     // Override equals() and hashCode() for entity comparisons
     @Override
     public boolean equals(Object o) {
@@ -153,7 +142,6 @@ public class Team {
                 ", description='" + description + '\'' +
                 ", yearEstablished=" + yearEstablished +
                 ", users=" + users +
-                ", events=" + events +
                 '}';
     }
 }
