@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -22,6 +23,7 @@ import com.example.spring_server.enums.TeamType;
 import com.example.spring_server.services.TeamService;
 
 @WebMvcTest(TeamController.class)
+@Import(TestSecurityConfig.class)
 public class TeamControllerTest {
 
     @Autowired
@@ -36,7 +38,8 @@ public class TeamControllerTest {
     @BeforeEach
     void setUp() {
         // Set up sample team data
-        team = new Team("West Coast Rascals", TeamType.CLUB, "contact@wcrascals.com", "A competitive Frisbee club",
+        team = new Team("West Coast Rascals", TeamType.CLUB, "contact@wcrascals.com",
+                "A competitive Frisbee club",
                 2012, "West Coast Park");
         team.setId(1L);
         teamList = List.of(team);
@@ -49,9 +52,11 @@ public class TeamControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/teams"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(true))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Teams retrieved successfully"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
+                        .value("Teams retrieved successfully"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].id").value(1))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].name").value("West Coast Rascals"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].name")
+                        .value("West Coast Rascals"));
 
         verify(teamService, times(1)).getAllTeams();
     }
@@ -63,7 +68,8 @@ public class TeamControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/teams/1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(true))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Team retrieved successfully"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
+                        .value("Team retrieved successfully"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.name").value("West Coast Rascals"));
 
@@ -88,7 +94,8 @@ public class TeamControllerTest {
                         """))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(true))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Team created successfully"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
+                        .value("Team created successfully"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.name").value("West Coast Rascals"));
 
         verify(teamService, times(1)).createTeam(any(TeamDTO.class));
@@ -116,8 +123,10 @@ public class TeamControllerTest {
                         """))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(true))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Team updated successfully"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.name").value("West Coast Rascals Updated"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
+                        .value("Team updated successfully"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.name")
+                        .value("West Coast Rascals Updated"));
 
         verify(teamService, times(1)).updateTeam(eq(1L), any(TeamDTO.class));
     }
@@ -130,7 +139,8 @@ public class TeamControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/teams/1"))
                 .andExpect(MockMvcResultMatchers.status().isAccepted())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(true))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Team deleted successfully"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
+                        .value("Team deleted successfully"));
 
         verify(teamService, times(1)).deleteTeam(1L);
     }
@@ -146,7 +156,8 @@ public class TeamControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/teams/1/members/1"))
                 .andExpect(MockMvcResultMatchers.status().isAccepted())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(true))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Player added to team successfully."))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
+                        .value("Player added to team successfully."))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.name").value("West Coast Rascals"));
 
@@ -164,7 +175,8 @@ public class TeamControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/teams/1/members/1"))
                 .andExpect(MockMvcResultMatchers.status().isAccepted())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(true))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Player removed from team successfully."))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
+                        .value("Player removed from team successfully."))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.name").value("West Coast Rascals"));
 

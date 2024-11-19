@@ -6,12 +6,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 
 import com.example.spring_server.controllers.AuthController;
 import com.example.spring_server.controllers.TeamController;
 import com.example.spring_server.controllers.UserController;
 
 @SpringBootTest
+@Import(TestSecurityConfig.class)
 public class SmokeTest {
 
     @Autowired
