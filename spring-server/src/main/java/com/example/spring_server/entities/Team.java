@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.example.spring_server.enums.TeamType;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
 
@@ -34,8 +34,11 @@ public class Team {
     @Column
     private String venue;
 
-    @ManyToMany(mappedBy = "teams")
-    @JsonBackReference
+    @OneToMany(mappedBy = "team")
+    private Set<Event> events;
+
+    @ManyToMany(mappedBy = "teams", fetch = FetchType.EAGER)
+    @JsonManagedReference
     private Set<User> users = new HashSet<>();
 
     public Team() {
@@ -115,6 +118,14 @@ public class Team {
         this.users = users;
     }
 
+    public Set<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(Set<Event> events) {
+        this.events = events;
+    }
+
     // Override equals() and hashCode() for entity comparisons
     @Override
     public boolean equals(Object o) {
@@ -142,6 +153,7 @@ public class Team {
                 ", description='" + description + '\'' +
                 ", yearEstablished=" + yearEstablished +
                 ", users=" + users +
+                ", events=" + events +
                 '}';
     }
 }

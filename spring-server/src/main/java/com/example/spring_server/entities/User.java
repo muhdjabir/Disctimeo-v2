@@ -8,21 +8,10 @@ import java.util.Set;
 import com.example.spring_server.dto.requests.UserDTO;
 import com.example.spring_server.enums.Position;
 import com.example.spring_server.enums.Role;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
@@ -51,8 +40,17 @@ public class User {
 
     @ManyToMany
     @JoinTable(name = "user_team", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "team_id"))
-    @JsonManagedReference
+    @JsonBackReference
     private Set<Team> teams = new HashSet<>();
+
+    // Many-to-many relationship with Event (registration of users for events)
+    @ManyToMany
+    @JoinTable(name = "event_registration", // Name of the join table
+            joinColumns = @JoinColumn(name = "user_id"), // Column for the user
+            inverseJoinColumns = @JoinColumn(name = "event_id") // Column for the event
+    )
+    @JsonManagedReference
+    private Set<Event> events = new HashSet<>(); // Events that the user is registered for
 
     public User() {
     }
@@ -132,6 +130,14 @@ public class User {
         this.teams = teams;
     }
 
+    public Set<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(Set<Event> events) {
+        this.events = events;
+    }
+
     // Override equals() and hashCode() for entity comparisons
     @Override
     public boolean equals(Object o) {
@@ -159,6 +165,7 @@ public class User {
                 ", position=" + position +
                 ", startedPlaying=" + startedPlaying +
                 ", teams =" + teams +
+                ", events=" + events +
                 '}';
     }
 }

@@ -124,9 +124,50 @@ public class TeamControllerTest {
 
     @Test
     void testDeleteTeam() throws Exception {
+        // No return value expected for delete
+        doNothing().when(teamService).deleteTeam(1L);
+
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/teams/1"))
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
+                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(true))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Team deleted successfully"));
 
         verify(teamService, times(1)).deleteTeam(1L);
+    }
+
+    @Test
+    void testAddUserToTeam() throws Exception {
+        Team team = new Team("West Coast Rascals", TeamType.CLUB, "contact@wcrascals.com",
+                "A competitive Frisbee club", 2012, "West Coast Park");
+        team.setId(1L);
+
+        when(teamService.addUserToTeam(eq(1L), eq(1L))).thenReturn(team);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/teams/1/users/1"))
+                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(true))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Player added to team successfully."))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.name").value("West Coast Rascals"));
+
+        verify(teamService, times(1)).addUserToTeam(1L, 1L);
+    }
+
+    @Test
+    void testRemoveUserFromTeam() throws Exception {
+        Team team = new Team("West Coast Rascals", TeamType.CLUB, "contact@wcrascals.com",
+                "A competitive Frisbee club", 2012, "West Coast Park");
+        team.setId(1L);
+
+        when(teamService.removeUserFromTeam(eq(1L), eq(1L))).thenReturn(team);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/teams/1/users/1"))
+                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(true))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Player removed from team successfully."))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.name").value("West Coast Rascals"));
+
+        verify(teamService, times(1)).removeUserFromTeam(1L, 1L);
     }
 }

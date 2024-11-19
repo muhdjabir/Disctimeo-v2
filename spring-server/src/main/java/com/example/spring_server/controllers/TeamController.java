@@ -57,6 +57,22 @@ public class TeamController {
     public ResponseEntity<ApiResponse<Void>> deleteTeam(@PathVariable Long id) {
         teamService.deleteTeam(id);
         ApiResponse<Void> response = new ApiResponse<>(true, "Team deleted successfully");
-        return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+    }
+
+    // Endpoint to add a user to a team
+    @PostMapping("/{teamId}/users/{userId}")
+    public ResponseEntity<ApiResponse<Team>> addUserToTeam(@PathVariable Long userId, @PathVariable Long teamId) {
+        Team team = teamService.addUserToTeam(userId, teamId);
+        ApiResponse<Team> response = new ApiResponse<>(true, "Player added to team successfully.", team);
+        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+    }
+
+    // Endpoint to remove a user from a team
+    @DeleteMapping("/{teamId}/users/{userId}")
+    public ResponseEntity<ApiResponse<Team>> removeUserFromTeam(@PathVariable Long userId, @PathVariable Long teamId) {
+        Team team = teamService.removeUserFromTeam(userId, teamId);
+        ApiResponse<Team> response = new ApiResponse<>(true, "Player removed from team successfully.", team);
+        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 }

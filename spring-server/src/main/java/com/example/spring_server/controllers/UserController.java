@@ -57,18 +57,4 @@ public class UserController {
         return new ApiResponse<User>(true, "User record patched", updatedUser)
                 .toResponseEntity(HttpStatus.OK);
     }
-
-    @PostMapping("/{id}/teams/{teamId}")
-    public ResponseEntity<ApiResponse<User>> addUserToTeam(@PathVariable Long id, @PathVariable Long teamId) {
-        User user = userService.addUserToTeam(id, teamId);
-        return new ApiResponse<User>(true, "User added to team", user)
-                .toResponseEntity(HttpStatus.OK);
-    }
-
-    @DeleteMapping("/{id}/teams/{teamId}")
-    public ResponseEntity<ApiResponse<User>> removeUserFromTeam(@PathVariable Long id, @PathVariable Long teamId) {
-        User user = userService.removeUserFromTeam(id, teamId);
-        return new ApiResponse<User>(true, "User removed from team", user)
-                .toResponseEntity(HttpStatus.OK);
-    }
 }
