@@ -1,3 +1,4 @@
+import NavigationBar from "@/components/navigation/NavigationBar";
 import "./globals.css";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 
@@ -6,24 +7,32 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  const pages = [
+    {
+      page: "Home",
+      path: "/home"
+    },
+    {
+      page: "Clubs",
+      path: "/clubs"
+    },
+    {
+      page: "Events",
+      path: "/events"
+    }
+  ]
+
   return (
     <html lang="en">
-      <head>
-        <link
-          rel="stylesheet"
-          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="stylesheet"
-          href="https://cdn.auth0.com/js/auth0-samples-theme/1.0/css/auth0-theme.min.css"
-        />
-      </head>
-
-      <UserProvider>
-        <body>{children}</body>
-      </UserProvider>
+      <body>
+        <UserProvider>
+          <NavigationBar pages={pages} />
+          <main className="pt-14">
+            {children}
+          </main>
+        </UserProvider>
+      </body>
     </html>
   );
 }
