@@ -4,15 +4,7 @@ import { useState } from 'react'
 import { Player } from "@/types/player"
 import { PlayerCard } from "@/components/cards/PlayerCard"
 import { Input } from "@/components/ui/input"
-import {
-    Pagination,
-    PaginationContent,
-    PaginationEllipsis,
-    PaginationItem,
-    PaginationLink,
-    PaginationNext,
-    PaginationPrevious,
-} from "@/components/ui/pagination"
+import { PaginatedList } from '@/components/lists/PaginatedList'
 
 // This is mock data. In a real application, you'd fetch this from an API.
 const mockPlayers: Player[] = [
@@ -95,10 +87,6 @@ export default function CommunityPage() {
         player.club.toLowerCase().includes(searchTerm.toLowerCase())
     )
 
-    const totalPages = Math.ceil(filteredPlayers.length / ITEMS_PER_PAGE)
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
-    const paginatedPlayers = filteredPlayers.slice(startIndex, startIndex + ITEMS_PER_PAGE)
-
     return (
         <div className="container mx-auto py-12">
             <h1 className="text-3xl font-bold mb-8">Community Players</h1>
@@ -109,51 +97,21 @@ export default function CommunityPage() {
                     value={searchTerm}
                     onChange={(e) => {
                         setSearchTerm(e.target.value)
-                        setCurrentPage(1)  // Reset to first page on new search
+                        setCurrentPage(1)
                     }}
                     className="max-w-md"
                 />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                {paginatedPlayers.map((player) => (
+            <PaginatedList
+                items={filteredPlayers}
+                itemsPerPage={ITEMS_PER_PAGE}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                renderItem={(player) => (
                     <PlayerCard key={player.id} player={player} />
-                ))}
-            </div>
-            {filteredPlayers.length > ITEMS_PER_PAGE && (
-                <Pagination>
-                    <PaginationContent>
-                        <PaginationItem>
-                            <PaginationPrevious
-                                href="#"
-                                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                aria-disabled={currentPage === 1}
-                            />
-                        </PaginationItem>
-                        {[...Array(totalPages)].map((_, i) => (
-                            <PaginationItem key={i}>
-                                <PaginationLink
-                                    href="#"
-                                    onClick={() => setCurrentPage(i + 1)}
-                                    isActive={currentPage === i + 1}
-                                >
-                                    {i + 1}
-                                </PaginationLink>
-                            </PaginationItem>
-                        ))}
-                        <PaginationItem>
-                            <PaginationNext
-                                href="#"
-                                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                                aria-disabled={currentPage === totalPages}
-                            />
-                        </PaginationItem>
-                    </PaginationContent>
-                </Pagination>
-            )}
-            {filteredPlayers.length === 0 && (
-                <p className="text-center text-muted-foreground mt-8">No players found matching your search criteria.</p>
-            )}
+                )}
+                noItemsMessage="No players found matching your search criteria."
+            />
         </div>
     )
 }
-

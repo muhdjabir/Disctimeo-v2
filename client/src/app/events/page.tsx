@@ -11,15 +11,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import {
-    Pagination,
-    PaginationContent,
-    PaginationEllipsis,
-    PaginationItem,
-    PaginationLink,
-    PaginationNext,
-    PaginationPrevious,
-} from "@/components/ui/pagination"
+import { PaginatedList } from '@/components/lists/PaginatedList'
 
 // This is mock data. In a real application, you'd fetch this from an API.
 const mockEvents: Event[] = [
@@ -120,14 +112,8 @@ export default function EventsPage() {
         (typeFilter === 'All' || event.type === typeFilter)
     )
 
-    const totalPages = Math.ceil(filteredEvents.length / ITEMS_PER_PAGE)
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
-    const paginatedEvents = filteredEvents.slice(startIndex, startIndex + ITEMS_PER_PAGE)
-
     const handleRegister = (eventId: string) => {
-        // In a real application, you'd call an API to register the user
         console.log(`Registered for event with ID: ${eventId}`)
-        // For this example, we'll just log the registration
     }
 
     return (
@@ -140,7 +126,7 @@ export default function EventsPage() {
                     value={searchTerm}
                     onChange={(e) => {
                         setSearchTerm(e.target.value)
-                        setCurrentPage(1)  // Reset to first page on new search
+                        setCurrentPage(1)
                     }}
                     className="max-w-sm"
                 />
@@ -148,7 +134,7 @@ export default function EventsPage() {
                     value={typeFilter}
                     onValueChange={(value) => {
                         setTypeFilter(value as EventType | 'All')
-                        setCurrentPage(1)  // Reset to first page on new filter
+                        setCurrentPage(1)
                     }}
                 >
                     <SelectTrigger className="max-w-[180px]">
@@ -163,46 +149,18 @@ export default function EventsPage() {
                     </SelectContent>
                 </Select>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                {paginatedEvents.map((event) => (
+            <PaginatedList
+                items={filteredEvents}
+                itemsPerPage={ITEMS_PER_PAGE}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                renderItem={(event) => (
                     <EventCard key={event.id} event={event} onRegister={handleRegister} />
-                ))}
-            </div>
-            {filteredEvents.length > ITEMS_PER_PAGE && (
-                <Pagination>
-                    <PaginationContent>
-                        <PaginationItem>
-                            <PaginationPrevious
-                                href="#"
-                                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                aria-disabled={currentPage === 1}
-                            />
-                        </PaginationItem>
-                        {[...Array(totalPages)].map((_, i) => (
-                            <PaginationItem key={i}>
-                                <PaginationLink
-                                    href="#"
-                                    onClick={() => setCurrentPage(i + 1)}
-                                    isActive={currentPage === i + 1}
-                                >
-                                    {i + 1}
-                                </PaginationLink>
-                            </PaginationItem>
-                        ))}
-                        <PaginationItem>
-                            <PaginationNext
-                                href="#"
-                                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                                aria-disabled={currentPage === totalPages}
-                            />
-                        </PaginationItem>
-                    </PaginationContent>
-                </Pagination>
-            )}
-            {filteredEvents.length === 0 && (
-                <p className="text-center text-muted-foreground mt-8">No events found matching your search criteria.</p>
-            )}
+                )}
+                noItemsMessage="No events found matching your search criteria."
+            />
         </div>
     )
 }
+
 

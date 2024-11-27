@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { Club } from "@/types/club"
 import { ClubCard } from "@/components/cards/ClubCard"
 import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
 import {
     Select,
     SelectContent,
@@ -12,15 +11,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import {
-    Pagination,
-    PaginationContent,
-    PaginationEllipsis,
-    PaginationItem,
-    PaginationLink,
-    PaginationNext,
-    PaginationPrevious,
-} from "@/components/ui/pagination"
+import { PaginatedList } from '@/components/lists/PaginatedList'
 
 // This is placeholder data. In a real application, you'd fetch this from an API.
 const allClubs: Club[] = [
@@ -134,7 +125,6 @@ const allClubs: Club[] = [
     },
 ];
 
-
 const ITEMS_PER_PAGE = 6
 
 export default function ClubsPage() {
@@ -148,10 +138,6 @@ export default function ClubsPage() {
         (teamTypeFilter === 'All' || club.teamType === teamTypeFilter)
     )
 
-    const totalPages = Math.ceil(filteredClubs.length / ITEMS_PER_PAGE)
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
-    const paginatedClubs = filteredClubs.slice(startIndex, startIndex + ITEMS_PER_PAGE)
-
     return (
         <div className="container mx-auto py-12">
             <h1 className="text-3xl font-bold mb-8">Frisbee Clubs</h1>
@@ -162,7 +148,7 @@ export default function ClubsPage() {
                     value={searchTerm}
                     onChange={(e) => {
                         setSearchTerm(e.target.value)
-                        setCurrentPage(1)  // Reset to first page on new search
+                        setCurrentPage(1)
                     }}
                     className="max-w-sm"
                 />
@@ -170,7 +156,7 @@ export default function ClubsPage() {
                     value={teamTypeFilter}
                     onValueChange={(value) => {
                         setTeamTypeFilter(value as Club['teamType'] | 'All')
-                        setCurrentPage(1)  // Reset to first page on new filter
+                        setCurrentPage(1)
                     }}
                 >
                     <SelectTrigger className="max-w-[180px]">
@@ -185,46 +171,16 @@ export default function ClubsPage() {
                     </SelectContent>
                 </Select>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                {paginatedClubs.map((club) => (
+            <PaginatedList
+                items={filteredClubs}
+                itemsPerPage={ITEMS_PER_PAGE}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                renderItem={(club) => (
                     <ClubCard key={club.id} club={club} />
-                ))}
-            </div>
-            {filteredClubs.length > ITEMS_PER_PAGE && (
-                <Pagination>
-                    <PaginationContent>
-                        <PaginationItem>
-                            <PaginationPrevious
-                                href="#"
-                                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                aria-disabled={currentPage === 1}
-                            />
-                        </PaginationItem>
-                        {[...Array(totalPages)].map((_, i) => (
-                            <PaginationItem key={i}>
-                                <PaginationLink
-                                    href="#"
-                                    onClick={() => setCurrentPage(i + 1)}
-                                    isActive={currentPage === i + 1}
-                                >
-                                    {i + 1}
-                                </PaginationLink>
-                            </PaginationItem>
-                        ))}
-                        <PaginationItem>
-                            <PaginationNext
-                                href="#"
-                                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                                aria-disabled={currentPage === totalPages}
-                            />
-                        </PaginationItem>
-                    </PaginationContent>
-                </Pagination>
-            )}
-            {filteredClubs.length === 0 && (
-                <p className="text-center text-muted-foreground">No clubs found matching your search and filter criteria.</p>
-            )}
+                )}
+                noItemsMessage="No clubs found matching your search and filter criteria."
+            />
         </div>
     )
 }
-
