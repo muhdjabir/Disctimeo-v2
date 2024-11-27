@@ -7,7 +7,7 @@ import { Menu } from 'lucide-react'
 
 export default function NavigationBar({ pages }: { pages: { page: string; path: string }[] }) {
     return (
-        <nav className="fixed inset-x-0 top-0 z-50 bg-white shadow-sm dark:bg-gray-950/90 h-14">
+        <nav className="fixed inset-x-0 top-0 z-50 shadow-sm h-14 bg-white">
             <div className="w-full max-w-7xl mx-auto px-4">
                 <div className="flex justify-between h-14 items-center">
                     <div className="flex items-center gap-2">
@@ -54,7 +54,7 @@ export default function NavigationBar({ pages }: { pages: { page: string; path: 
                                 </Link>)}
 
                                 <div className="pt-4 space-y-2">
-                                    <Button className="w-full bg-sky-700">
+                                    <Button className="w-full">
                                         <a href="/api/auth/login">
                                             Join Us
                                         </a>
@@ -66,7 +66,7 @@ export default function NavigationBar({ pages }: { pages: { page: string; path: 
 
                     {/* Desktop Sign In/Up Buttons */}
                     <div className="hidden md:flex items-center gap-4">
-                        <Button className="bg-sky-700" size="sm">
+                        <Button className="" size="sm">
                             <a href="/api/auth/login">
                                 Join Us
                             </a>

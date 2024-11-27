@@ -10,8 +10,8 @@ export default function RootLayout({
 
   const pages = [
     {
-      page: "Home",
-      path: "/home"
+      page: "Community",
+      path: "/community"
     },
     {
       page: "Clubs",
