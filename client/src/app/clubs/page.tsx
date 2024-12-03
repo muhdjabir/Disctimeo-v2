@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Club } from "@/types/club"
+import { Club, TeamType } from "@/types/club"
 import { ClubCard } from "@/components/cards/ClubCard"
 import { Input } from "@/components/ui/input"
 import {
@@ -21,7 +21,7 @@ const allClubs: Club[] = [
         description: "A vibrant community of disc enthusiasts pushing the boundaries of the sport.",
         establishedDate: "2015",
         logoUrl: "/placeholder.svg?height=100&width=100",
-        teamType: "Ultimate",
+        teamType: TeamType.Ultimate,
         members: [
             { id: "101", name: "Alice Smith", role: "Captain", avatarUrl: "/avatars/alice.png" },
             { id: "102", name: "Bob Johnson", role: "Player", avatarUrl: "/avatars/bob.png" },
@@ -37,7 +37,7 @@ const allClubs: Club[] = [
         description: "Dedicated to mastering the art of aerial disc maneuvers and competitive play.",
         establishedDate: "2018",
         logoUrl: "/placeholder.svg?height=100&width=100",
-        teamType: "Freestyle",
+        teamType: TeamType.Freestyle,
         members: [
             { id: "103", name: "Charlie Brown", role: "Coach", avatarUrl: "/avatars/charlie.png" },
             { id: "104", name: "Dana White", role: "Performer", avatarUrl: "/avatars/dana.png" },
@@ -53,7 +53,7 @@ const allClubs: Club[] = [
         description: "A close-knit group of players fostering friendship through disc sports.",
         establishedDate: "2010",
         logoUrl: "/placeholder.svg?height=100&width=100",
-        teamType: "Mixed",
+        teamType: TeamType.Mixed,
         members: [
             { id: "105", name: "Eva Green", role: "Player", avatarUrl: "/avatars/eva.png" },
             { id: "106", name: "Frank Black", role: "Manager", avatarUrl: "/avatars/frank.png" },
@@ -69,7 +69,7 @@ const allClubs: Club[] = [
         description: "Striving for excellence in Ultimate Frisbee competitions at all levels.",
         establishedDate: "2005",
         logoUrl: "/placeholder.svg?height=100&width=100",
-        teamType: "Ultimate",
+        teamType: TeamType.Ultimate,
         members: [
             { id: "107", name: "George Wilson", role: "Captain", avatarUrl: "/avatars/george.png" },
             { id: "108", name: "Helen Brown", role: "Player", avatarUrl: "/avatars/helen.png" },
@@ -84,7 +84,7 @@ const allClubs: Club[] = [
         description: "Perfecting the art of disc golf one hole at a time.",
         establishedDate: "2012",
         logoUrl: "/placeholder.svg?height=100&width=100",
-        teamType: "Disc Golf",
+        teamType: TeamType.DiscGolf,
         members: [
             { id: "109", name: "Ian Parker", role: "Golfer", avatarUrl: "/avatars/ian.png" },
         ],
@@ -98,7 +98,7 @@ const allClubs: Club[] = [
         description: "Pushing the boundaries of freestyle disc performances.",
         establishedDate: "2019",
         logoUrl: "/placeholder.svg?height=100&width=100",
-        teamType: "Freestyle",
+        teamType: TeamType.Freestyle,
         members: [
             { id: "110", name: "Jane Doe", role: "Performer", avatarUrl: "/avatars/jane.png" },
             { id: "111", name: "Kyle Smith", role: "Performer", avatarUrl: "/avatars/kyle.png" },
@@ -113,7 +113,7 @@ const allClubs: Club[] = [
         description: "Embracing all forms of disc sports under one roof.",
         establishedDate: "2008",
         logoUrl: "/placeholder.svg?height=100&width=100",
-        teamType: "Mixed",
+        teamType: TeamType.Mixed,
         members: [
             { id: "112", name: "Liam Jones", role: "Player", avatarUrl: "/avatars/liam.png" },
             { id: "113", name: "Mia Davis", role: "Player", avatarUrl: "/avatars/mia.png" },

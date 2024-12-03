@@ -1,4 +1,9 @@
-export type EventType = 'Tournament' | 'Trial' | 'Training' | 'Social'
+export enum EventType {
+    Tournament = "Tournament",
+    Trial = 'Trial',
+    Training = 'Training',
+    Social = 'Social',
+}
 
 interface Member {
     id: string

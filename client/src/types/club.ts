@@ -12,13 +12,20 @@ export interface Event {
     type: 'Trial' | 'Tournament';
 }
 
+export enum TeamType {
+    Ultimate = "Ultimate",
+    DiscGolf = "Disc Golf",
+    Freestyle = "Freestyle",
+    Mixed = "Mixed"
+}
+
 export interface Club {
     id: string;
     name: string;
     description: string;
     establishedDate: string;
     logoUrl: string;
-    teamType: 'Ultimate' | 'Disc Golf' | 'Freestyle' | 'Mixed';
+    teamType: TeamType;
     members: Member[];
     events: Event[];
 }
